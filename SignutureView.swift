@@ -15,6 +15,9 @@ class SignutureView: UIView {
     
     var path: UIBezierPath?
     var previousPoint: CGPoint = CGPoint.zero
+    var image: UIImage? {
+        return path?.shapeImage2(view: self)
+    }
     
     
     override func draw(_ rect: CGRect) {
@@ -34,6 +37,9 @@ class SignutureView: UIView {
     
     func commonInit() {
         
+        
+        
+        
         path = UIBezierPath()
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panno))
         pan.maximumNumberOfTouches = 1
@@ -50,7 +56,6 @@ class SignutureView: UIView {
         let midPoint: CGPoint = midpoint(p0: previousPoint, p1: currentPoint)
         
         path?.lineWidth = 2
-        print(pan.velocity(in: self))
         if pan.state == .began {
             path?.move(to: currentPoint)
         } else if pan.state == .changed {
@@ -58,6 +63,8 @@ class SignutureView: UIView {
         }
         
         previousPoint = currentPoint
+        
+        
         
         self.setNeedsDisplay()
         
@@ -80,3 +87,43 @@ class SignutureView: UIView {
 func midpoint(p0: CGPoint, p1: CGPoint) -> CGPoint {
     return CGPoint(x: (p0.x + p1.x) / 2.0, y: (p0.y + p1.y) / 2.0)
 }
+
+
+extension UIBezierPath {
+    func shapeImage2(view: UIView) -> UIImage! {
+        
+        // begin graphics context for drawing
+        UIGraphicsBeginImageContextWithOptions(view.frame.size, false, UIScreen.main.scale)
+        
+        // configure the view to render in the graphics context
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        
+        // get reference to the graphics context
+        let context = UIGraphicsGetCurrentContext()
+        
+        // translate matrix so that path will be centered in bounds
+        context?.translateBy(x: -(bounds.origin.x - self.lineWidth), y: -(bounds.origin.y - self.lineWidth))
+        // set color
+        UIColor.black.setStroke()
+        
+        // draw the stroke
+        stroke()
+        
+        // get an image of the graphics context
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        // end the context
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+        
+        
+    
+    
+    
+    
+}
+
+
+
