@@ -16,7 +16,7 @@ class SignutureView: UIView {
     var path: UIBezierPath?
     var previousPoint: CGPoint = CGPoint.zero
     var image: UIImage? {
-        return path?.shapeImage2(view: self)
+        return path?.shapeImage(view: self)
     }
     
     
@@ -90,13 +90,13 @@ func midpoint(p0: CGPoint, p1: CGPoint) -> CGPoint {
 
 
 extension UIBezierPath {
-    func shapeImage2(view: UIView) -> UIImage! {
+    func shapeImage(view: UIView) -> UIImage! {
         
         // begin graphics context for drawing
         UIGraphicsBeginImageContextWithOptions(view.frame.size, false, UIScreen.main.scale)
         
         // configure the view to render in the graphics context
-        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        //view.layer.render(in: UIGraphicsGetCurrentContext()!)
         
         // get reference to the graphics context
         let context = UIGraphicsGetCurrentContext()
